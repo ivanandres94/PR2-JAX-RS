@@ -118,7 +118,7 @@ public class LanguageResource {
                         query = "INSERT INTO language (name) VALUES ('" + json.getString("name") + "')";
                         result = stat.executeUpdate(query);
                     } catch (JSONException ex) {
-                        Logger.getLogger(ActorsResource.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(LanguageResource.class.getName()).log(Level.SEVERE, null, ex);
                         valid = false;
                     }
 
