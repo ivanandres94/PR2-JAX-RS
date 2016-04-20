@@ -30,7 +30,6 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(reset.ActorsResource.class);
-        resources.add(reset.CountryResource.class);
-    }
+        resources.add(reset.CountryResource.class    }
     
 }
