@@ -23,26 +23,28 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * REST Web Service
  *
  * @author Ivan
  */
-@Path("actors/{actor_id}")
+@Path("actors/{actor_id:.*}")
 public class ActorsResource {
-
-    public Connection conn;
-    public Statement stat;
-    public ResultSet result;
 
     @Context
     private UriInfo context;
+
+    private String[] keys = new String[2];
 
     /**
      * Creates a new instance of actors
      */
     public ActorsResource() {
+        this.keys[0] = "first_name";
+        this.keys[1] = "last_name";
     }
 
     /**
@@ -52,8 +54,29 @@ public class ActorsResource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getJson(@PathParam("actor_id") String actor_id){
-        return "";
+    public String getJson(@PathParam("actor_id") String actor_id) {
+        String Json = "";
+        Connection conn = this.getConexion();
+        Statement stat = null;
+        ResultSet result = null;
+
+        if (conn != null) {
+            try {
+                stat = (Statement) conn.createStatement();
+
+                result = stat.executeQuery("select * from actor where actor_id=" + actor_id);
+
+                while (result.next()) {
+                    Json = "{'id ':'" + actor_id + "','name ':'" + result.getString(2) + ", last_name : '" + result.getString(3) + "'}";
+                }
+
+            } catch (SQLException ex) {
+                System.out.println("Lego not found\n" + ex);
+            }
+
+        }
+
+        return Json;
     }
 
     /**
@@ -63,10 +86,55 @@ public class ActorsResource {
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public void putJson(String content) {
-    }
-    
-    public Connection getConexion(){
+    public String putJson(String content) {
+        JSONObject json = null;
+        boolean valid = true;
+
+        //Pasar el contenido a JSON
+        try {
+            json = new JSONObject(content);
+        } catch (JSONException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        for (String key : keys) {
+            if (!json.has(key)) {
+                valid = false;
+                break;
+            }
+        }
+
+        if (json != null && valid) {
+            Connection conn = this.getConexion();
+            Statement stat;
+            int result;
+            if (conn != null) {
+                try {
+                    stat = (Statement) conn.createStatement();
+                    String query = "";
+                    try {
+                        query = "INSERT INTO actor (first_name, last_name) VALUES ('"+json.getString("first_name")+"', '"+json.getString("last_name")+"')";
+                        result = stat.executeUpdate(query);
+                    } catch (JSONException ex) {
+                        Logger.getLogger(ActorsResource.class.getName()).log(Level.SEVERE, null, ex);
+                        valid = false;
+                    }
+
+                    
+
+                } catch (SQLException ex) {
+                    System.out.println("Lego not found\n" + ex);
+                    valid = false;
+                }
+            }
+        }else{
+            System.out.println("Not valid format");
+        }
+        
+        return "{'succesful' : '"+valid+"'}";
+    } //{'first_name' : 'Yo', 'last_name' : 'sdklhdfjk'}
+
+    public Connection getConexion() {
         Connection conn = null;
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -80,7 +148,7 @@ public class ActorsResource {
         } catch (IllegalAccessException ex) {
             Logger.getLogger(ActorsResource.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return conn;
     }
 }
