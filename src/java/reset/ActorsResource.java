@@ -8,7 +8,6 @@ package reset;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -64,14 +63,20 @@ public class ActorsResource {
             try {
                 stat = (Statement) conn.createStatement();
 
-                result = stat.executeQuery("select * from actor where actor_id=" + actor_id);
+                String query = "select * from actor";
+
+                //Si no ens pasen cap ID busquem tots els actors
+                if(!actor_id.equals("")){
+                    query +=  " where actor_id=" + actor_id;
+                }
+                result = stat.executeQuery(query);
 
                 while (result.next()) {
-                    Json = "{'id ':'" + actor_id + "','name ':'" + result.getString(2) + ", last_name : '" + result.getString(3) + "'}";
+                    Json += "{'id ':'" + actor_id + "','name ':'" + result.getString(2) + ", last_name : '" + result.getString(3) + "'}";
                 }
 
             } catch (SQLException ex) {
-                System.out.println("Lego not found\n" + ex);
+                System.out.println(ex);
             }
 
         }
@@ -123,7 +128,7 @@ public class ActorsResource {
                     
 
                 } catch (SQLException ex) {
-                    System.out.println("Lego not found\n" + ex);
+                    System.out.println(ex);
                     valid = false;
                 }
             }
