@@ -5,6 +5,15 @@
  */
 package reset;
 
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -23,6 +32,10 @@ import javax.ws.rs.core.MediaType;
 @Path("actors/{actor_id}")
 public class ActorsResource {
 
+    public Connection conn;
+    public Statement stat;
+    public ResultSet result;
+
     @Context
     private UriInfo context;
 
@@ -34,23 +47,40 @@ public class ActorsResource {
 
     /**
      * Retrieves representation of an instance of reset.actors
+     *
      * @return an instance of java.lang.String
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getJson(@PathParam("actor_id") String actor_id) {
-        //TODO return proper representation object
-        
-        return "{'id ':'" + actor_id +"','name ':' Chus Lampreave'}";
-//        throw new UnsupportedOperationException();
+    public String getJson(@PathParam("actor_id") String actor_id){
+        return "";
     }
 
     /**
      * PUT method for updating or creating an instance of actors
+     *
      * @param content representation for the resource
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public void putJson(String content) {
+    }
+    
+    public Connection getConexion(){
+        Connection conn = null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            conn = (Connection) DriverManager.getConnection("jdbc:mysql://192.168.123.128/sakila", "nom", "badia123");
+        } catch (SQLException ex) {
+            System.out.println("Error de Conexion: " + ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ActorsResource.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(ActorsResource.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(ActorsResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return conn;
     }
 }
