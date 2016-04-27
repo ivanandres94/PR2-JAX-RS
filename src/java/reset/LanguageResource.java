@@ -38,14 +38,13 @@ public class LanguageResource {
     @Context
     private UriInfo context;
 
-    private String[] keys = new String[2];
+    private String[] keys = new String[1];
 
     /**
      * Creates a new instance of LanguageResource
      */
     public LanguageResource() {
         this.keys[0] = "name";
-        this.keys[1] = "last_update";
     }
 
     /**
@@ -138,7 +137,7 @@ public class LanguageResource {
         Connection conn = null;
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            conn = (Connection) DriverManager.getConnection("jdbc:mysql://192.168.123.128/sakila", "nom", "badia123");
+            conn = (Connection) DriverManager.getConnection("jdbc:mysql://192.168.123.142/sakila", "nom", "badia123");
         } catch (SQLException ex) {
             System.out.println("Error de Conexion: " + ex.getMessage());
         } catch (ClassNotFoundException ex) {
