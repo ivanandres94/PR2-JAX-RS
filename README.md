@@ -1,4 +1,5 @@
-Proves Curl
+#Proves Curl
+```bash
 
 echo "GETS"
 echo "Actors"
