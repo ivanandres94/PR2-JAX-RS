@@ -135,7 +135,7 @@ public class CountryResource {
         Connection conn = null;
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            conn = (Connection) DriverManager.getConnection("jdbc:mysql://192.168.123.128/sakila", "nom", "badia123");
+            conn = (Connection) DriverManager.getConnection("jdbc:mysql://192.168.123.142/sakila", "nom", "badia123");
         } catch (SQLException ex) {
             System.out.println("Error de Conexion: " + ex.getMessage());
         } catch (ClassNotFoundException ex) {
