@@ -33,6 +33,13 @@ do
   echo
 done
 
+echo "Inventory"
+for i in 1 2 3 4 5 6 7 8 9 10
+do
+  curl --REQUEST GET http://localhost:8080/PR2-JAX-RS/webresources/inventory/$i
+  echo
+done
+
 
 echo "PUTS"
 echo "Actors"
@@ -66,5 +73,13 @@ for i in 1 2 3 4 5 6 7 8 9 10
 do
   echo language_$i
   curl -X PUT -H "Content-Type:application/json" --DATA "{'name': '"language_$i"'}" http://localhost:8080/PR2-JAX-RS/webresources/language/
+  echo
+done
+
+echo "Inventory"
+for i in 1 2 3 4 5 6 7 8 9 10
+do
+  echo film_id_$i store_id_$i
+  curl -X PUT -H "Content-Type:application/json" --DATA "{'film_id': '"film_id_$i"', 'store_id': '"store_id_$i"'}" http://localhost:8080/PR2-JAX-RS/webresources/inventory/
   echo
 done
