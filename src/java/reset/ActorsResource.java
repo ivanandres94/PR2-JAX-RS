@@ -54,7 +54,7 @@ public class ActorsResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getJson(@PathParam("actor_id") String actor_id) {
-        String Json = "";
+        String Json = "[";
         Connection conn = this.getConexion();
         Statement stat = null;
         ResultSet result = null;
@@ -62,17 +62,15 @@ public class ActorsResource {
         if (conn != null) {
             try {
                 stat = (Statement) conn.createStatement();
-
+                
                 String query = "select * from actor";
-
-                //Si no ens pasen cap ID busquem tots els actors
-                if(!actor_id.equals("")){
-                    query +=  " where actor_id=" + actor_id;
-                }
+                System.out.println(actor_id);
+                if(!actor_id.equals("")) query += " where actor_id=" + actor_id;
+                
                 result = stat.executeQuery(query);
-
+                
                 while (result.next()) {
-                    Json += "{'id ':'" + actor_id + "','name ':'" + result.getString(2) + ", last_name : '" + result.getString(3) + "'}";
+                    Json += "{'id ':'" + result.getString(1) + "','name ':'" + result.getString(2) + ", last_name : '" + result.getString(3) + "'}";
                 }
 
             } catch (SQLException ex) {
@@ -80,7 +78,7 @@ public class ActorsResource {
             }
 
         }
-
+        Json += "]";
         return Json;
     }
 
@@ -143,7 +141,7 @@ public class ActorsResource {
         Connection conn = null;
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            conn = (Connection) DriverManager.getConnection("jdbc:mysql://192.168.123.142/sakila", "nom", "badia123");
+            conn = (Connection) DriverManager.getConnection("jdbc:mysql://192.168.80.175/sakila", "dawBadia", "password");
         } catch (SQLException ex) {
             System.out.println("Error de Conexion: " + ex.getMessage());
         } catch (ClassNotFoundException ex) {
