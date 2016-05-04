@@ -41,7 +41,7 @@ public class InventoryResource {
     /**
      * Creates a new instance of actors
      */
-    public ActorsResource() {
+    public InventoryResource() {
         this.keys[0] = "film_id";
         this.keys[1] = "store_id";
     }
